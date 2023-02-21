@@ -73,7 +73,8 @@ async function updateDrone(req, res) {
 async function deleteDrone(req, res) {
   try {
     const droneId = req.params.id;
-    const deletedDrone = await DroneModel.findByIdAndDelete(droneId);
+    const deletedDrone = await DroneModel.findById(droneId);
+    deletedDrone.remove();
     res.status(200).json(deletedDrone);
   } catch (error) {
     res.status(400).json({ message: error.message });
