@@ -49,6 +49,16 @@ async function getAllUsers(req, res) {
 
 const updateUser = async function (req, res) {
   try {
-  } catch (error) {}
+    const userId = req.params.id;
+    const options = { new: true };
+    const updatedUser = await UserModel.findByIdAndUpdate(
+      userId,
+      req.body,
+      options
+    );
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
 };
 module.exports = { addUser, updateUser, getUser, getAllUsers };

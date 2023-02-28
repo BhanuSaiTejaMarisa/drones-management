@@ -6,9 +6,11 @@ const {
   updateCategory,
 } = require("../controllers/missionCategoryController");
 
-router.post("/add-category", addCategory);
-router.get("/get/:id", getCategoryById);
-router.get("/get-all", getAllCategories);
-router.patch("/update/:id", updateCategory);
+router.post("/", addCategory);
+
+router.get("/:id", getCategoryById);
+router.get("/", getAllCategories);
+
+router.patch("/:id", updateCategory);
 
 module.exports = router;

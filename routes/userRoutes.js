@@ -7,10 +7,10 @@ const {
 
 const router = require("express").Router();
 
-router.post("/add", addUser);
-router.get("/get/:id", getUser);    
-router.get("/get-all", getAllUsers);
-router.patch("/update/:id", updateUser);
+router.post("/", addUser);
+router.get("/:id", getUser);    
+router.get("/", getAllUsers);
+router.patch("/:id", updateUser);
 // router.delete("/delete", deleteUser);
 
 module.exports = router;

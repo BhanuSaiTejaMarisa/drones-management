@@ -7,10 +7,10 @@ const siteRoutes = require("./siteRoutes.js");
 
 const router = express.Router();
 
-router.use("/category", missionCategoryRoutes);
-router.use("/user", userRoutes);
-router.use("/drone", droneRoutes);
-router.use("/site", siteRoutes);
+router.use("/categories", missionCategoryRoutes);
+router.use("/users", userRoutes);
+router.use("/drones", droneRoutes);
+router.use("/sites", siteRoutes);
 router.use("/test", testRouter);
 
 module.exports = router;

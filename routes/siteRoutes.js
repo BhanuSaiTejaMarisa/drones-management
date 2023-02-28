@@ -6,18 +6,19 @@ const {
   getSitesByUserId,
   // updateSite,
   // deleteSite,
-  deleteDroneToSite
+  deleteDroneToSite,
 } = require("../controllers/siteController.js");
 
 const router = require("express").Router();
 
-router.post("/add", addSite);
-router.patch("/add-drone/:id", addDroneToSite);
-router.patch("/delete-drone/:id", deleteDroneToSite);
+router.post("/", addSite);
 
-router.get("/get/:id", getSite);
-router.get("/get-all", getAllSites);
-router.get("/get-by-user", getSitesByUserId);
+router.get("/:id", getSite);
+router.get("", getAllSites);
+router.get("", getSitesByUserId);
+
+router.patch("/:id/drones", addDroneToSite);
+router.patch("/:id/drones", deleteDroneToSite);
 // router.patch("/update/:id", updateSite);
 // router.delete("/delete/:id", deleteSite);
 

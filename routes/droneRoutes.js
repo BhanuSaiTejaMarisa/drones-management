@@ -4,16 +4,16 @@ const {
   updateDrone,
   getAllDrones,
   deleteDrone,
-  getDronesByUserId
+  getDronesByUserId,
 } = require("../controllers/droneController.js");
 
 const router = require("express").Router();
 
-router.post("/add", addDrone);
-router.get("/get/:id", getDrone);
-router.get("/get-all", getAllDrones);
-router.patch("/update/:id", updateDrone);
-router.delete("/delete/:id", deleteDrone);
-router.get("/get-by-user", getDronesByUserId);
+router.post("/", addDrone);
+router.get("/:id", getDrone);
+router.get("/", getAllDrones);
+router.patch("/:id", updateDrone);
+router.delete("/:id", deleteDrone);
+router.get("/user/:userId", getDronesByUserId);
 
 module.exports = router;

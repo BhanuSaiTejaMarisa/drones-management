@@ -39,7 +39,7 @@ async function getAllDrones(req, res) {
 
 async function getDronesByUserId(req, res) {
   try {
-    const user_id = req.query.userId;
+    const user_id = req.params.userId;
     const user = await UserModel.findById(user_id)
       .populate("drones")
       .exec((err, user) => {
