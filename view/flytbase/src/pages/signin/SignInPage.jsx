@@ -1,43 +1,42 @@
-import "./LogInPage.scss";
+import "./SignInPage.scss";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useToken from "../../utils/auth/useToken";
 import axios from "axios"
-
-export default function LogInPage() {
+export default function SignInPage() {
+  const [_, setToken] = useToken();
   const [credentials, setCredentials] = useState({
     email: "",
     password: "",
+    confirm_password: "",
   });
   const navigate = useNavigate();
-  const [_, setToken] = useToken();
+
   function handleCredentials(event) {
     const { name, value } = event.target;
     setCredentials({ ...credentials, [name]: value });
   }
 
-  async function handleLogIn() {
-    const request = await axios.post("/api/login", {
+  async function handleSignIn() {
+    const response = await axios.post("/api/signin", {
       email: credentials.email,
       password: credentials.password
     })
-    const { token } = request.data;
+
+    const { token } = response.data;
     setToken(token);
-    navigate("/",
-      {
-        replace: true
-      })
+    console.log(response, token);
+    navigate("/", {
+      replace: true
+    })
   }
 
-  function handleForgotPassword() {
-    navigate("/forgot-password");
-  }
-  function handleSignIn() {
-    navigate("/signin");
+  function handleLogIn() {
+    navigate("/login");
   }
   return (
-    <div className="LogInPage">
-      <h1>Log In</h1>
+    <div className="SignInPage">
+      <h1>Sign In</h1>
       <input
         type="email"
         name="email"
@@ -52,15 +51,25 @@ export default function LogInPage() {
         onChange={handleCredentials}
         placeholder="password"
       />
+      <input
+        type="password"
+        name="confirm_password"
+        value={credentials.confirm_password}
+        onChange={handleCredentials}
+        placeholder="confirm password"
+      />
       <hr />
       <button
-        disabled={!credentials.email || !credentials.password}
-        onClick={handleLogIn}
+        disabled={
+          !credentials.email ||
+          !credentials.password ||
+          credentials.password !== credentials.confirm_password
+        }
+        onClick={handleSignIn}
       >
-        LogIn
+        SignIn
       </button>
-      <button onClick={handleForgotPassword}>Forgot Password?</button>
-      <button onClick={handleSignIn}>Don't have an account? SignIn</button>
+      <button onClick={handleLogIn}> Have an account? LogIn</button>
     </div>
   );
 }

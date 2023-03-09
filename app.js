@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const routes = require("./routes/routes.js");
+const cors = require("cors")
 const mongoString = process.env.DATABASE_KEY;
 
 mongoose.connect(mongoString);
@@ -19,8 +20,11 @@ const app = express();
 
 app.use(express.json());
 
+app.use(cors());
+
+
 app.use("/api", routes);
 
 app.listen(5000, () => {
-  console.log("Server started at 3000");
+  console.log("Server started at 5000");
 });
