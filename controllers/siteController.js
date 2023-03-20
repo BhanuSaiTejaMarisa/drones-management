@@ -9,7 +9,6 @@ async function addSite(req, res) {
     const site = new SiteModel({ ...data, user_id: userId });
     await site.save();
     const options = { new: true };
-    console.log(site);
 
     //approach 1
     // const updatedUserData = await UserModel.findByIdAndUpdate(

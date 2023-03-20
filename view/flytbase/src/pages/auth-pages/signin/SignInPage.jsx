@@ -1,10 +1,10 @@
 import "./SignInPage.scss";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import useToken from "../../utils/auth/useToken";
+import useToken from "../../../utils/auth/useToken";
 import axios from "axios"
 export default function SignInPage() {
-  const [_, setToken] = useToken();
+  const [, setToken] = useToken();
   const [credentials, setCredentials] = useState({
     email: "",
     password: "",
@@ -26,7 +26,7 @@ export default function SignInPage() {
     const { token } = response.data;
     setToken(token);
     console.log(response, token);
-    navigate("/", {
+    navigate("/verify-email-notification", {
       replace: true
     })
   }
@@ -35,7 +35,7 @@ export default function SignInPage() {
     navigate("/login");
   }
   return (
-    <div className="SignInPage">
+    <div className="SignInPage auth-card">
       <h1>Sign In</h1>
       <input
         type="email"

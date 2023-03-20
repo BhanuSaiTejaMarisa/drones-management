@@ -1,8 +1,9 @@
 import "./LogInPage.scss";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import useToken from "../../utils/auth/useToken";
+import useToken from "../../../utils/auth/useToken";
 import axios from "axios"
+import useUser from "../../../utils/auth/useUser";
 
 export default function LogInPage() {
   const [credentials, setCredentials] = useState({
@@ -10,7 +11,8 @@ export default function LogInPage() {
     password: "",
   });
   const navigate = useNavigate();
-  const [_, setToken] = useToken();
+  const [token, setToken] = useToken();
+  const { user } = useUser();
   function handleCredentials(event) {
     const { name, value } = event.target;
     setCredentials({ ...credentials, [name]: value });
@@ -28,6 +30,7 @@ export default function LogInPage() {
         replace: true
       })
   }
+  console.log("loginpage", { token, user });
 
   function handleForgotPassword() {
     navigate("/forgot-password");
@@ -36,7 +39,7 @@ export default function LogInPage() {
     navigate("/signin");
   }
   return (
-    <div className="LogInPage">
+    <div className="LogInPage auth-card">
       <h1>Log In</h1>
       <input
         type="email"
