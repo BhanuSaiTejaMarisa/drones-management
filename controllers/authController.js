@@ -32,7 +32,7 @@ async function signIn(req, res) {
             verificationString
         });
         await result.save();
-        const { _id } = result;
+        const { _id: id } = result;
         try {
 
             await sendEmail({
@@ -49,7 +49,7 @@ async function signIn(req, res) {
 
         jwt.sign(
             {
-                _id,
+                id,
                 email,
                 isVerified: false,
             },

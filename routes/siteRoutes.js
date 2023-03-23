@@ -5,21 +5,22 @@ const {
   getAllSites,
   getSitesByUserId,
   // updateSite,
-  // deleteSite,
+  deleteSite,
   deleteDroneToSite,
 } = require("../controllers/siteController.js");
+const authMiddleware = require("../middlewares/authMiddleware.js");
 
 const router = require("express").Router();
 
-router.post("/", addSite);
+router.post("/", authMiddleware, addSite);
 
-router.get("/:id", getSite);
-router.get("", getAllSites);
-router.get("", getSitesByUserId);
+router.get("/:id", authMiddleware, getSite);
+router.get("", authMiddleware, getAllSites);
+router.get("/users/:userId", authMiddleware, getSitesByUserId);
 
-router.patch("/:id/drones", addDroneToSite);
-router.patch("/:id/drones", deleteDroneToSite);
+router.patch("/:id/drones", authMiddleware, addDroneToSite);
+router.patch("/:id/drones", authMiddleware, deleteDroneToSite);
 // router.patch("/update/:id", updateSite);
-// router.delete("/delete/:id", deleteSite);
+router.delete("/:id", deleteSite);
 
 module.exports = router;

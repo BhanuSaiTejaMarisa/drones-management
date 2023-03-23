@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const UserModel = require("./userModel");
 
 const droneSchema = new mongoose.Schema(
   {
@@ -7,33 +8,33 @@ const droneSchema = new mongoose.Schema(
       unique: true,
       required: true,
     },
-    make_name: {
+    makeName: {
       type: String,
     },
-    site_id: {
+    siteId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Site",
       validate: {
-        validator: async (site_id) => {
-          const site = await mongoose.models.Site.findById(site_id);
+        validator: async (siteId) => {
+          const site = await mongoose.models.Site.findById(siteId);
           return site !== null;
         },
         message: "Invalid site id",
       },
     },
-    user_id: {
+    userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
       validate: {
-        validator: async (user_id) => {
-          const user = await mongoose.models.User.findById(user_id);
+        validator: async (userId) => {
+          const user = await mongoose.models.User.findById(userId);
           return user !== null;
         },
         message: "Invalid user id",
       },
     },
-    drone_id: {
+    droneId: {
       type: String,
       unique: true,
       required: true,
@@ -48,7 +49,7 @@ const droneSchema = new mongoose.Schema(
 );
 droneSchema.pre("remove", async function (next) {
   //this refers to this particualr drones document
-  const siteId = this.site;
+  const siteId = this.siteId;
   if (siteId) {
     try {
       const site = await mongoose.model("Site").findById(siteId);
@@ -57,6 +58,12 @@ droneSchema.pre("remove", async function (next) {
     } catch (err) {
       console.error(err);
     }
+  }
+  const userId = this.userId;
+  if (userId) {
+    const user = await UserModel.findById(userId);
+    user.drones.pull(this._id);
+    user.save();
   }
   next();
 });

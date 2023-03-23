@@ -2,7 +2,7 @@ import "./SignInPage.scss";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useToken from "../../../utils/auth/useToken";
-import axios from "axios"
+import { instance } from "../../../utils/axios/axios";
 export default function SignInPage() {
   const [, setToken] = useToken();
   const [credentials, setCredentials] = useState({
@@ -18,14 +18,14 @@ export default function SignInPage() {
   }
 
   async function handleSignIn() {
-    const response = await axios.post("/api/signin", {
+    const response = await instance.post("/signin", {
       email: credentials.email,
       password: credentials.password
     })
 
     const { token } = response.data;
     setToken(token);
-    console.log(response, token);
+
     navigate("/verify-email-notification", {
       replace: true
     })

@@ -1,16 +1,17 @@
 const DroneModel = require("../models/droneModel.js");
 const UserModel = require("../models/userModel.js");
 const SiteModel = require("../models/siteModel.js");
+const ObjectId = require('mongoose').Types.ObjectId;
 
 async function addSite(req, res) {
   try {
     const userId = req.query.userId;
     const data = req.body;
-    const site = new SiteModel({ ...data, user_id: userId });
+    const site = new SiteModel({ ...data, userId });
     await site.save();
-    const options = { new: true };
 
     //approach 1
+    // const options = { new: true };
     // const updatedUserData = await UserModel.findByIdAndUpdate(
     //   userId,
     //   { $push: { sites: site._id } },
@@ -39,8 +40,9 @@ async function getSite(req, res) {
 
 async function getSitesByUserId(req, res) {
   try {
-    const userId = req.query.userId;
-    const data = await UserModel.findById(userId).populate("    ");
+    const userId = req.params.userId;
+    const data = await UserModel.findById(userId).populate("sites");
+
     res.status(200).json(data.sites);
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -59,7 +61,25 @@ async function getAllSites(req, res) {
 async function addDroneToSite(req, res) {
   try {
     const siteId = req.params.id;
-    const droneId = req.body.drone_id;
+    const droneId = req.body.droneId;
+    const site = await SiteModel.findById(siteId);
+
+    const alreadyExists = site.drones.some(drone => {
+      const id = ObjectId(drone).toString();
+
+      return id === droneId
+    });
+    if (alreadyExists) {
+      res.status(200).json({ message: "drone aleady exists in the site" })
+    }
+
+    const drone = await DroneModel.findById(droneId);
+
+    const existingSiteId = ObjectId(drone.siteId).toString()
+
+    const existingSite = await SiteModel.findByIdAndUpdate(existingSiteId, {
+      $pull: { drones: droneId }
+    })
     const options = { new: true };
     const updatedSite = await SiteModel.findByIdAndUpdate(
       siteId,
@@ -69,7 +89,7 @@ async function addDroneToSite(req, res) {
     const updatedDrone = await DroneModel.findByIdAndUpdate(
       droneId,
       {
-        site_id: siteId,
+        siteId,
       },
       options
     );
@@ -79,21 +99,23 @@ async function addDroneToSite(req, res) {
   }
 }
 
-// async function deleteSite(req, res) {
-//   try {
-//     const SiteId = req.params.id;
-//     const deletedSite = await SiteModel.findByIdAndDelete(SiteId);
-//     res.status(200).json(deletedSite);
-//   } catch (error) {
-//     res.status(400).json({ message: error.message });
-//   }
-// }
+async function deleteSite(req, res) {
+  try {
+    const siteId = req.params.id;
+    console.log("deleteing site");
+    const deletedSite = await SiteModel.findById(siteId);
+    deletedSite.remove();
+    res.status(200).json(deletedSite);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+}
 
 // async function getSitesByUserId(req, res) {
 //   try {
-//     const user_id = req.query.userId;
-//     await UserModel.findById(user_id)
-//       .populate("Sites")
+//     const userId = req.query.userId;
+//     await UserModel.findById(userId)
+//       .populate("sites")
 //       .exec((err, user) => {
 //         if (err) {
 //           console.error(err);
@@ -109,7 +131,7 @@ async function addDroneToSite(req, res) {
 async function deleteDroneToSite(req, res) {
   try {
     const siteId = req.params.id;
-    const droneId = req.body.drone_id;
+    const droneId = req.body.droneId;
     const options = { new: true };
     // const updatedSite = await SiteModel.findByIdAndUpdate(
     //   siteId,
@@ -122,7 +144,7 @@ async function deleteDroneToSite(req, res) {
     // const updatedDrone = await DroneModel.findByIdAndUpdate(
     //   droneId,
     //   {
-    //     site_id: null,
+    //     siteId: null,//use $unset to remove field
     //   },
     //   options
     // );
@@ -138,6 +160,6 @@ module.exports = {
   getSite,
   getAllSites,
   getSitesByUserId,
-  //   deleteSite,
+  deleteSite,
   deleteDroneToSite,
 };

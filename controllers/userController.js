@@ -31,8 +31,8 @@ async function addDrone(req, res) {
 
 async function getUser(req, res) {
   try {
-    const id = req.params.id;
-    const data = await UserModel.findById(id);
+    const userId = req.params.userId;
+    const data = await UserModel.findById(userId);
     res.status(200).json(data);
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -84,4 +84,20 @@ const updateUser = async function (req, res) {
     res.status(400).json({ message: error.message });
   }
 };
-module.exports = { addUser, updateUser, getUser, getAllUsers };
+async function getDronesByUserId(req, res) {
+  try {
+    const userId = req.params.userId;
+    const user = await UserModel.findById(userId)
+      .populate("drones")
+      .exec((err, user) => {
+        if (err) {
+          console.error(err);
+          return;
+        }
+        return res.status(200).json(user?.drones);
+      });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+}
+module.exports = { addUser, updateUser, getUser, getAllUsers,getDronesByUserId };

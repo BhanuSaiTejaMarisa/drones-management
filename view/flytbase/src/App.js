@@ -9,6 +9,8 @@ import ForgotPassword from "./pages/auth-pages/forgot-password/ForgotPassword";
 import VerifyEmailNotification from "./pages/auth-pages/verify-email-notification/VerifyEmailNotification";
 import VerifyEmail from "./pages/auth-pages/verify-email/VerifyEmail";
 import ResetPassword from "./pages/auth-pages/reset-password/ResetPassword";
+import Drones from "./pages/drones/Drones";
+import Sites from "./pages/sites/Sites";
 
 function App() {
   return (
@@ -17,6 +19,9 @@ function App() {
         <Route element={<PrivateRoutes />}>
           <Route path="/" element={<Home />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/drones" element={<Drones />} />
+          <Route path="/sites" element={<Sites />} />
+
         </Route>
         <Route path="/login" element={<LogInPage />} />
         <Route path="/signin" element={<SignInPage />} />

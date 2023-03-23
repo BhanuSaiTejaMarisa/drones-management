@@ -2,13 +2,14 @@ const express = require("express");
 const Model = require("../models/model.js");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
+const authMiddleware = require("../middlewares/authMiddleware.js");
 //Post method
-router.post("/post", async (req, res) => {
-  const data = new Model({
-    name: req.body.name,
-    age: req.body.age,
-  });
+router.post("/", authMiddleware, async (req, res) => {
   try {
+    const data = new Model({
+      name: req.body.name,
+      age: req.body.age,
+    });
     const dataToSave = await data.save();
     res.status(200).json(dataToSave);
   } catch (error) {

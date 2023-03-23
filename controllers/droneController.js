@@ -5,7 +5,7 @@ async function addDrone(req, res) {
   try {
     const userId = req.query.userId;
     const data = req.body;
-    const drone = new DroneModel({ ...data, user_id: userId });
+    const drone = new DroneModel({ ...data, userId });
     const dataToSave = await drone.save();
     const options = { new: true };
     const updatedUserData = await UserModel.findByIdAndUpdate(
@@ -37,22 +37,7 @@ async function getAllDrones(req, res) {
   }
 }
 
-async function getDronesByUserId(req, res) {
-  try {
-    const user_id = req.params.userId;
-    const user = await UserModel.findById(user_id)
-      .populate("drones")
-      .exec((err, user) => {
-        if (err) {
-          console.error(err);
-          return;
-        }
-        return res.status(200).json(user.drones);
-      });
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-}
+
 
 async function updateDrone(req, res) {
   try {
@@ -85,7 +70,6 @@ module.exports = {
   addDrone,
   getDrone,
   getAllDrones,
-  getDronesByUserId,
   updateDrone,
   deleteDrone,
 };

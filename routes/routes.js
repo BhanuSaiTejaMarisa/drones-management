@@ -14,7 +14,7 @@ router.use("/categories", missionCategoryRoutes);
 router.use("/users", userRoutes);
 router.use("/drones", droneRoutes);
 router.use("/sites", siteRoutes);
-// router.use("/test", testRouter);
+router.use("/test", testRouter);
 // router.use("/test-email", testEmailRoutes);
 
 module.exports = router;

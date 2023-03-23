@@ -3,7 +3,7 @@ import { Navigate, Outlet } from "react-router-dom";
 import useUser from "./useUser";
 export default function PrivateRoutes() {
   const { user, isLoading } = useUser();
-  console.log(isLoading, user);
+ 
   if (isLoading) {
     return <h1>Loading...</h1>
   }

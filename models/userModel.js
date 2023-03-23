@@ -28,8 +28,8 @@ const userSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Site",
         validate: {
-          validator: async (site_id) => {
-            const site = await mongoose.models.Site.findById(site_id);
+          validator: async (siteId) => {
+            const site = await mongoose.models.Site.findById(siteId);
             return site !== null;
           },
           message: "Invalid site id",
@@ -43,8 +43,8 @@ const userSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Drone",
         validate: {
-          validator: async (drone_id) => {
-            const drone = await mongoose.models.Drone.findById(drone_id);
+          validator: async (droneId) => {
+            const drone = await mongoose.models.Drone.findById(droneId);
             return drone !== null;
           },
           message: "Invalid drone id",
