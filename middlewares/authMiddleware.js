@@ -21,8 +21,8 @@ const authMiddleware = (req, res, next) => {
     if (!user) {
       res.status(403).json({ message: "unauthorized" })
     }
-    next()
   })
+  next()
 
 }
 
