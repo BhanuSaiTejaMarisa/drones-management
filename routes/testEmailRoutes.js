@@ -18,4 +18,3 @@ router.post("/", async (req, res) => {
     }
 })
 module.exports = router;
-// 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

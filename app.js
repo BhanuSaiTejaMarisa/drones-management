@@ -50,7 +50,7 @@ io.on("connection", (socket) => {
 
   socket.on("message", (messge) => {
     console.log("Received Message: ", message);
-    io.emite("message", message)
+    io.emit("message", message)
   })
 });
 app.use(express.json());

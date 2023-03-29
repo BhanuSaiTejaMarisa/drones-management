@@ -21,8 +21,8 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/drones" element={<Drones />} />
           <Route path="/sites" element={<Sites />} />
-
         </Route>
+
         <Route path="/login" element={<LogInPage />} />
         <Route path="/signin" element={<SignInPage />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
