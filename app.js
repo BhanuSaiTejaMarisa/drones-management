@@ -34,9 +34,32 @@ app.use(cors({
   credentials: true
 }));
 
+io.use((socket, next) => {
+  const username = socket.handshake.auth.username;
+  if (!username) {
+    return next(new Error("invalid username"));
+  }
+  socket.username = username;
+  next();
+});
 
 io.on("connection", (socket) => {
   console.log("A user connected");
+  const users = [];
+  for (let [id, socket] of io.of("/").sockets) {
+    users.push({
+      userId: id,
+      username: socket.username
+    })
+  }
+
+  socket.emit("users", users);
+
+  //notify existing users
+  socket.broadcast.emit("user connected", {
+    userId: socket.id,
+    username: socket.username
+  })
 
   // Handle socket events here
   socket.on('disconnect', () => {
@@ -48,7 +71,7 @@ io.on("connection", (socket) => {
     io.emit('chat message', msg);
   });
 
-  socket.on("message", (messge) => {
+  socket.on("message", (message) => {
     console.log("Received Message: ", message);
     io.emit("message", message)
   })
