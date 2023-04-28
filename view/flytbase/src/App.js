@@ -11,6 +11,8 @@ import VerifyEmail from "./pages/auth-pages/verify-email/VerifyEmail";
 import ResetPassword from "./pages/auth-pages/reset-password/ResetPassword";
 import Drones from "./pages/drones/Drones";
 import Sites from "./pages/sites/Sites";
+import EmailVerificationCodePage from "./pages/auth-pages/email-verification-code-page/EmailVerificationCodepage";
+// import EmailVerificationCodePage from "./pages/auth-pages/email-verification-code-page/EmailVerificationCodepage";
 
 function App() {
   return (
@@ -27,8 +29,9 @@ function App() {
         <Route path="/signin" element={<SignInPage />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/verify-email-notification" element={<VerifyEmailNotification />} />
+        <Route path="/verify-email" element={<EmailVerificationCodePage />} />
         <Route path="/verify-email/:verificationString" element={<VerifyEmail />} />
-        <Route path="/reset-password/:passwordResetCode" element={<ResetPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
       </Routes>
     </div>
   );

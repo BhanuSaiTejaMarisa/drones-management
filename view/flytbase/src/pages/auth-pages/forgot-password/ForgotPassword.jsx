@@ -18,7 +18,7 @@ export default function ForgotPassword() {
             axios.put(`/api/forgot-password/${emailValue}`);
             setSuccess(true);
             setTimeout(() => {
-                navigate("/login")
+                navigate(`/reset-password?email=${encodeURIComponent(emailValue)}`)
             }, 3000)
         }
         catch (err) {

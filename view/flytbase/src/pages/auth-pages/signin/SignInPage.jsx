@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useToken from "../../../utils/auth/useToken";
 import { instance } from "../../../utils/axios/axios";
+
 export default function SignInPage() {
   const [, setToken] = useToken();
   const [credentials, setCredentials] = useState({
@@ -26,7 +27,7 @@ export default function SignInPage() {
     const { token } = response.data;
     setToken(token);
 
-    navigate("/verify-email-notification", {
+    navigate(`/verify-email-notification?email=${encodeURIComponent(credentials.email)}`, {
       replace: true
     })
   }

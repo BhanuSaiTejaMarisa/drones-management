@@ -1,13 +1,14 @@
 import axios from 'axios';
 import React, { useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 
 export default function ResetPassword() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [isFailure, setIsFailure] = useState(false);
   const [passwordValue, setPasswordValue] = useState("")
   const [confirmPasswordValue, setConfirmPasswordValue] = useState("");
-  const { passwordResetCode } = useParams()
+  const [passwordResetCode, setPasswordResetCode] = useState("");
+  const [searchParams,] = useSearchParams()
   const navigate = useNavigate();
 
   function handlePasswordValue(e) {
@@ -25,7 +26,8 @@ export default function ResetPassword() {
   async function handleResetPassword() {
     try {
       await axios.put(`/api/reset-password/${passwordResetCode}`, {
-        newPassword: passwordValue
+        newPassword: passwordValue,
+        email: searchParams.get("email")
       })
       setIsSuccess(true)
     }
@@ -50,8 +52,10 @@ export default function ResetPassword() {
     <div className='ResetPassword auth-card'>
       <h1>Reset Password</h1>
       <p>Please enter a new password</p>
+      <input type="text" value={passwordResetCode} onChange={(e) => setPasswordResetCode(e.target.value)} placeholder="password" />
       <input type="password" value={passwordValue} onChange={handlePasswordValue} placeholder="password" />
       <input type="password" value={confirmPasswordValue} onChange={handleConfirmPasswordValue} placeholder="confirm password" />
+
       <button onClick={handleResetPassword} disabled={!passwordValue || passwordValue !== confirmPasswordValue}>Reset Password</button>
     </div>
   )
