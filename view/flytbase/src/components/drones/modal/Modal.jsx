@@ -64,7 +64,7 @@ export default function Modal({ showModal, setShowModal, droneId, userId }) {
       <div className='modal-overlay'></div>
       <div className="modal">
         <div className="modal-header">
-          <h3>Add Site to a Drone <span className="drone-title">{drone.name}</span></h3>
+          <h3>Add Site to a Drone<span className="drone-title">{drone.name}</span></h3>
           <img src={CloseIcon} alt="" className="edit-icon" onClick={() => setShowModal(false)} />
         </div>
         <div className="modal-content">
