@@ -1,4 +1,4 @@
-name: Auto-approve PRs
+name: Auto-approve PRs with Identical Images
 
 on:
   pull_request:
@@ -13,37 +13,25 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Auto-approve PR
+      - name: Identify Integration PR SHA
         run: |
-          # Check if the current PR targets staging branches
           if [[ "${{ github.event.pull_request.base.ref }}" == "staging" ]]; then
-            # Get the number of the corresponding PR to integration
-            integration_pr_number=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-              "https://api.github.com/repos/${{ github.repository }}/pulls?head=${{ github.event.pull_request.head.sha }}&base=integration" \
-              | jq -r '.[0].number')
+            # Get SHA of current PR head
+            current_pr_sha=${{ github.sha }}
+            echo "Current PR SHA: $current_pr_sha"
 
-            echo "Integration PR Number: $integration_pr_number"
+            # Find approved integration PR with identical commits
+            integration_pr_sha=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+              "https://api.github.com/repos/${{ github.repository }}/pulls?state=closed&is:merged&base=integration" \
+              | jq -r '.[] | select(.head.sha != "$current_pr_sha" and .maintainer_can_merge and .mergeable and .head.sha == any(.commits[].sha) as $sha | $sha)')
 
-            if [[ "$integration_pr_number" == "null" ]]; then
-              echo "Error: Unable to fetch Integration PR Number."
-              exit 1
-            fi
+            echo "Integration PR SHA: $integration_pr_sha"
 
-            # Check if the corresponding PR to integration is approved
-            reviews_response=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-              "https://api.github.com/repos/${{ github.repository }}/pulls/${integration_pr_number}/reviews")
-
-            echo "Reviews Response: $reviews_response"
-
-            approval_review_id=$(echo "$reviews_response" | jq -r '.[] | select(.user.login == "github-actions[bot]" and .state == "APPROVED") | .id')
-
-            echo "Approval Review ID: $approval_review_id"
-
-            if [[ "$approval_review_id" != "" ]]; then
-              # If approved, auto-approve the current PR
+            if [[ "$integration_pr_sha" != "" ]]; then
+              # Auto-approve current PR if integration PR with same image is approved
               curl -X PUT -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
                 -H "Accept: application/vnd.github.v3+json" \
-                "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.number }}/reviews/$approval_review_id" \
+                "https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.number }}/reviews" \
                 -d '{"event": "APPROVE"}'
             fi
           fi
