@@ -35,7 +35,7 @@ jobs:
 
             echo "Reviews Response: $reviews_response"
 
-            approval_review_id=$(echo "$reviews_response" | jq -r '.[] | select(.user.login == "github-actions[bot]" and .state == "APPROVED") | .id')
+            approval_review_id=$(echo "$reviews_response" | jq -r '.[] | select(.state == "APPROVED") | .id')
 
             echo "Approval Review ID: $approval_review_id"
 
